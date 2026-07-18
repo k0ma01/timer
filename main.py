@@ -5,23 +5,50 @@
 # после снова вызвать рабочий час
 # после полного окончания таймера стоит вывести что-то одобрительное типа 'Great!You did it!'
 import time
-
-minutes = 59
-seconds = 60
-total_seconds = 0
-number_of_timer_hours = int(input("How many hours should the timer be set for? "))
+from exceptions import InvalidHours
 
 
-#def timer_with_break()
-for hour in range(number_of_timer_hours):
-    while minutes > 0:
-        while seconds > 0:
-            seconds -= 1
-            time.sleep(1)
-            print(f"{minutes:02d}:{seconds:02d}")
-            if seconds ==0:
-                minutes -= 1
-                seconds=60
-            continue
-     #if minutes == 0:
-        # print("")
+def get_valid_hours() -> int:
+    while True:
+        try:
+            hours = get_hours_input()
+            validate_hours(hours)
+            break
+        except InvalidHours:
+            print("Please enter a valid number")
+    return hours
+
+
+def get_hours_input() -> int:
+    raw_hours = input("How many hours should the timer be set for? ")
+    try:
+        int_hours = int(raw_hours)
+        return int_hours
+    except ValueError:
+        raise InvalidHours
+
+
+
+def validate_hours(hours: int) -> None:
+    if hours <= 0:
+        raise InvalidHours
+
+
+def main():
+    hours = get_valid_hours()
+
+
+main()
+
+
+def timer(hours, minutes=59, seconds=60):
+    for hour in range(hours):
+        while minutes > 0:
+            while seconds > 0:
+                seconds -= 1
+                time.sleep(1)
+                print(f"{minutes:02d}:{seconds:02d}")
+                if seconds == 0:
+                    minutes -= 1
+                    seconds = 60
+                continue
